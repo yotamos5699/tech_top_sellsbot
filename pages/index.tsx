@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 
 const Home: NextPage = () => {
   return (
@@ -32,12 +31,20 @@ const Home: NextPage = () => {
             <p className="mt-4 text-xl">בנה מערכת מותאמת בעזרת טכנולוגיית AI</p>
           </a>
 
-          <a
+          {/* <a
             href="https://www.facebook.com/ido.moshe1"
             className="mt-6 w-96 rounded-xl border p-6  hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">למד עלינו &rarr;</h3>
             <p className="mt-4 text-xl">אנחנו גברים אחושרמוטה, ליותר אגו טריפ, כנס פנימה</p>
+          </a> */}
+
+          <a
+            href="/bidbad/bidding"
+            className="mt-6 w-96 rounded-xl border p-6  hover:text-blue-600 focus:text-blue-600"
+          >
+            <h3 className="text-2xl font-bold"> BidBad &rarr;</h3>
+            <p className="mt-4 text-xl"> הימורים בין חברים, שהם אוייבים</p>
           </a>
 
           <a
