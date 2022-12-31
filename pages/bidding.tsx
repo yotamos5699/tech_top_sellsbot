@@ -25,7 +25,7 @@ const setContenders = (contenders: picData[]) => {
 };
 
 const fetchPics = async () =>
-  fetch("http://localhost:3000/api/bidbad/getpics")
+  fetch("https://tech-top-sellsbot.vercel.app/api/bidbad/getpics")
     .then((res) => {
       console.log({ res });
       return res.json();
