@@ -39,10 +39,7 @@ const Home: NextPage = () => {
             <p className="mt-4 text-xl">אנחנו גברים אחושרמוטה, ליותר אגו טריפ, כנס פנימה</p>
           </a> */}
 
-          <a
-            href="/tech_top_sellsbot/bidding"
-            className="mt-6 w-96 rounded-xl border p-6  hover:text-blue-600 focus:text-blue-600"
-          >
+          <a href="/bidding" className="mt-6 w-96 rounded-xl border p-6  hover:text-blue-600 focus:text-blue-600">
             <h3 className="text-2xl font-bold"> BidBad &rarr;</h3>
             <p className="mt-4 text-xl"> הימורים בין חברים, שהם אוייבים</p>
           </a>
