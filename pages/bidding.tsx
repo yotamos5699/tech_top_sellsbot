@@ -6,6 +6,17 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import autoAnimate from "@formkit/auto-animate";
 
+import {
+  DndContext,
+  closestCorners,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from "@dnd-kit/sortable";
 interface picData {
   id: string | number;
   name: string;
@@ -13,7 +24,7 @@ interface picData {
   picUrl: string;
   amount?: number;
 }
-
+const PORT = "http://localhost:3000/" || process.env.PORT;
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
   for (let i = 0; i <= contenders.length - 2; i++) {
@@ -25,7 +36,7 @@ const setContenders = (contenders: picData[]) => {
 };
 
 const fetchPics = async () =>
-  fetch("https://tech-top-sellsbot.vercel.app/api/bidbad/getpics")
+  fetch(PORT + "api/bidbad/getpics")
     .then((res) => {
       console.log({ res });
       return res.json();
@@ -41,18 +52,32 @@ const fetchPics = async () =>
 export default function Bidding() {
   // const [show, setShow] = useState(false);
   // const parent = useRef(null);
+  const [activeId, setActiveId] = useState(null);
   const [contendersNumber, setContendersNumber] = useState(0);
-  const [picsArray, setPicsArray] = useState<any[]>();
-
+  const [picsArray, setPicsArray] = useState<any[]>([]);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
   const pics = useQuery({
     queryKey: "getpics",
     queryFn: fetchPics,
   });
 
   useEffect(() => {
-    if (picsArray == undefined && pics.data !== undefined) {
+    if (contendersNumber * 2 - 1 == pics.data?.questions.length)
+      setPicsArray((prev) => prev.sort((a: any, b: any) => b.amount - a.amount));
+  }, [picsArray]);
+
+  useEffect(() => {
+    console.log("pics.data", pics.data, { picsArray });
+    if (picsArray[0] == undefined && pics.data?.contenders !== undefined) {
+      console.log({ pics });
       setPicsArray([...pics.data.contenders]);
     }
+    console.log("in use effect", { picsArray });
   }, [pics.data]);
 
   const handleClick = (e: any) => {
@@ -68,8 +93,45 @@ export default function Bidding() {
     );
     console.log({ picsArray });
   };
+
+  const handleDragStart = (event: any) => {
+    setActiveId(event.active.id);
+  };
+
+  const handleDragEnd = (event: any) => {
+    setActiveId(null);
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      console.log({ active, over });
+      setPicsArray((pics: any) => {
+        let oldIndex = 0;
+        pics.forEach((pic: picData, index: number) => {
+          if (active.id == pic.id) oldIndex = index;
+        });
+        let newIndex = 0;
+        pics.forEach((pic: picData, index: number) => {
+          if (over.id == pic.id) newIndex = index;
+        });
+        console.log({ oldIndex, newIndex });
+        let newArray: picData[] = [];
+        picsArray.forEach((pic: picData, index: number) => {
+          newArray.push(index == oldIndex ? picsArray[newIndex] : index == newIndex ? picsArray[oldIndex] : pic);
+        });
+        return [...newArray];
+      });
+    }
+    console.log({ picsArray });
+  };
+
+  //   {items.map((id) => (
+  //     <SortableItem key={id} id={id} handle={true} value={id} />
+  //   ))}
+
+  // </SortableContext>
+
   return (
-    <div dir="rtl" className="flex flex-col items-center w-screen">
+    <div dir="rtl" className="flex flex-col items-center w-screen touch-none">
       <div className="flex mt-8 mb-20">
         <h3 className="ml-8"> זמן לסיום ההימורים</h3>
         <Countdown date={Date.now() + 1000000000} />
@@ -81,23 +143,57 @@ export default function Bidding() {
         </div>
 
         {pics.data && pics.data != undefined && (
-          <div className="flex w-10/12 justify-center border-gray-300 border-2 mt-4   ">
+          <div className="flex flex-col items-center w-screen justify-center  ">
             {contendersNumber <= pics.data.questions.length - 1 ? (
-              <div className="flex">
-                <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber]} />
-                <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber + 1]} />
+              <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
+                <div className="flex flex-col sm:flex-row   ">
+                  <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber]} />
+                  <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber + 1]} />
+                </div>
               </div>
             ) : (
-              <div>
-                {
-                  /*@ts-ignore*/
-                  picsArray &&
-                    picsArray
-                      ?.sort((a: any, b: any) => b.amount - a.amount)
-                      .map((pic) => <Contender handleClick={handleClick} picData={pic} />)
-                }
-              </div>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCorners}
+                onDragEnd={handleDragEnd}
+                onDragStart={handleDragStart}
+              >
+                <SortableContext items={picsArray} strategy={rectSortingStrategy}>
+                  <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-screen">
+                    {
+                      /*@ts-ignore*/
+                      picsArray &&
+                        picsArray.map((pic, index) => (
+                          <div key={pic.id} className="relative sm:w-full">
+                            <p className="absolute  w-1/6 h-1/6 text-center align-text-bottom text-xl mr-6 border-gray-300 border-2 rounded-lg">
+                              {index + 1}
+                            </p>{" "}
+                            <Contender key={pic.id} id={pic.id} handleClick={handleClick} picData={pic} />
+                          </div>
+                        ))
+                    }
+                  </div>
+                  <DragOverlay>
+                    {activeId ? (
+                      <div
+                        style={{
+                          //  width: "100px",
+                          //  height: "100px",
+                          backgroundColor: "red",
+                        }}
+                      ></div>
+                    ) : null}
+                  </DragOverlay>
+                </SortableContext>
+              </DndContext>
             )}
+            <p className="mt-4 flex justify-center items-center gap-6">
+              <span className="flex space-x-4"> בחירה </span>
+              <span className="flex space-x-4 text-rose-300 text-xl font-bold">|{contendersNumber / 2 + 1}|</span>
+              <span>מתוך</span>
+
+              <span className=" text-rose-300 text-xl font-bold">|{pics.data.questions.length / 2}|</span>
+            </p>
           </div>
         )}
       </div>
@@ -108,18 +204,71 @@ export default function Bidding() {
 interface contenderProps {
   picData: picData;
   handleClick: any;
+  id?: any;
 }
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+// const SortableItem = (props) => {
+
+//   return (
+//     <div >
+//       <Box>
+//         <button>
+//           Drag handle
+//         </button>
+//         <div
+//           style={{
+//             minWidth: "30px",
+//             minHeight: "20px",
+//             border: "1px solid balck",
+//             borderColor: "black"
+//           }}
+//         >
+//           {props.value}
+//         </div>
+//       </Box>
+//     </div>
+//   );
+// };
+
 export function Contender(props: contenderProps) {
+  // console.log(" id", props.id);
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: props.id,
+  });
+  isDragging && console.log("pic id", props.picData.id);
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    //  width: "100px",
+    //   height: "100px",
+    // border: "2px solid red",
+    // backgroundColor: "#cccccc",
+    //margin: "10px",
+    zIndex: isDragging ? "100" : "auto",
+    //   opacity: isDragging ? 0.3 : 1,
+  };
   return (
-    <div className="flex flex-col items-center mt-8 ml-6 mr-8 " onClick={props.handleClick}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="flex flex-col items-center mt-8 ml-6 mr-8 sm:w-full "
+      onClick={props.handleClick}
+    >
       <p>{props.picData.name}</p>
-      <div className="relative w-48 h-48 ml-8 mr-8 mb-8">
+      <div className="relative w-48 h-48 sm:h-10/12 sm:w-8/12  ml-8 mr-8 mb-8">
         <Image
           id={props.picData.name}
           src={props.picData.picUrl}
           fill={true}
-          className="w-48 h-50 hover:bg-slate-300 rounded-2xl mb-8 h-40"
+          sizes="(max-width: 768px) 100vw,
+          (max-width: 1200px) 50vw,
+          33vw"
+          className=" hover:bg-slate-300 rounded-2xl mb-8 h-40"
           alt="Image Alt"
         />
       </div>

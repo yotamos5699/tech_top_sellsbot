@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import { env } from "process";
 
 interface picData {
   id: string | number;
