@@ -52,6 +52,7 @@ const fetchPics = async () =>
 export default function Bidding() {
   // const [show, setShow] = useState(false);
   // const parent = useRef(null);
+  const [isFinished, setIsFinished] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [contendersNumber, setContendersNumber] = useState(0);
   const [picsArray, setPicsArray] = useState<any[]>([]);
@@ -67,8 +68,11 @@ export default function Bidding() {
   });
 
   useEffect(() => {
-    if (contendersNumber * 2 - 1 == pics.data?.questions.length)
+    if (contendersNumber * 2 - 1 == pics.data?.questions.length) {
       setPicsArray((prev) => prev.sort((a: any, b: any) => b.amount - a.amount));
+      setIsFinished(true);
+      console.log({ isFinished });
+    }
   }, [picsArray]);
 
   useEffect(() => {
@@ -136,12 +140,22 @@ export default function Bidding() {
         <h3 className="ml-8"> זמן לסיום ההימורים</h3>
         <Countdown date={Date.now() + 1000000000} />
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center align-middle">
         <div className="flex items-center">
           <p className="ml-4">מי יותר</p>
           <p className={"text-4xl text-red-400"}>יהרוג את כולם</p>
         </div>
-
+        <div className="flex w-full justify-between gap-20 mt-5 items-center self-center">
+          {" "}
+          <p> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
+          <p
+            className={
+              "w-1/6 text-center ml-8 bg-blue-500 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
+            }
+          >
+            שלח
+          </p>
+        </div>
         {pics.data && pics.data != undefined && (
           <div className="flex flex-col items-center w-screen justify-center  ">
             {contendersNumber <= pics.data.questions.length - 1 ? (
@@ -168,7 +182,13 @@ export default function Bidding() {
                             <p className="absolute  w-1/6 h-1/6 text-center align-text-bottom text-xl mr-6 border-gray-300 border-2 rounded-lg">
                               {index + 1}
                             </p>{" "}
-                            <Contender key={pic.id} id={pic.id} handleClick={handleClick} picData={pic} />
+                            <Contender
+                              isFinished={isFinished}
+                              key={pic.id}
+                              id={pic.id}
+                              handleClick={handleClick}
+                              picData={pic}
+                            />
                           </div>
                         ))
                     }
@@ -205,6 +225,7 @@ interface contenderProps {
   picData: picData;
   handleClick: any;
   id?: any;
+  isFinished?: boolean;
 }
 
 import { useSortable } from "@dnd-kit/sortable";
@@ -248,7 +269,7 @@ export function Contender(props: contenderProps) {
     // backgroundColor: "#cccccc",
     //margin: "10px",
     zIndex: isDragging ? "100" : "auto",
-    //   opacity: isDragging ? 0.3 : 1,
+    opacity: isDragging && props.isFinished ? 0.3 : 1,
   };
   return (
     <div
@@ -256,11 +277,16 @@ export function Contender(props: contenderProps) {
       style={style}
       {...listeners}
       {...attributes}
-      className="flex flex-col items-center mt-8 ml-6 mr-8 sm:w-full "
+      className="flex flex-col items-center mt-8 ml-6 mr-8 sm:w-full"
       onClick={props.handleClick}
     >
       <p>{props.picData.name}</p>
-      <div className="relative w-48 h-48 sm:h-10/12 sm:w-8/12  ml-8 mr-8 mb-8">
+      <div
+        className="relative w-48 h-48 sm:h-10/12 sm:w-8/12  ml-8 mr-8 mb-8
+      
+      transition duration-500 ease-in-out bg-gray-800 hover:bg-gray-300 transform hover:-translate-y-1 hover:scale-110 ...
+      "
+      >
         <Image
           id={props.picData.name}
           src={props.picData.picUrl}

@@ -5,7 +5,7 @@ const Home: NextPage = () => {
   return (
     <div dir="rtl" className="flex  min-h-screen flex-col items-center justify-center py-2">
       <Head>
-        <title>טקטופ בוט</title>
+        <title> שטויות בNEXT JS</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -13,13 +13,15 @@ const Home: NextPage = () => {
         <h1 className="text-6xl font-bold">
           ברוך הבא ל{" "}
           <a className="text-blue-600" href="https://nextjs.org">
-            רמקולים בע"מ
+            שטויות כלליות
           </a>
         </h1>
 
         <p className="mt-3 text-2xl">
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">מתקדם תכנון מערכות בעזרת AI </code>
-          קונים חכם רמקולים
+          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg ml-4 text-gray-500">
+            מתקדם תכנון מערכות בעזרת AI{" "}
+          </code>
+          קונים חכם דברים מטומטמים
         </p>
 
         <div className=" mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
@@ -28,7 +30,7 @@ const Home: NextPage = () => {
             className="mt-6 w-96 rounded-xl border p-6  hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">נסה את הבוט &rarr;</h3>
-            <p className="mt-4 text-xl">בנה מערכת מותאמת בעזרת טכנולוגיית AI</p>
+            <p className="mt-4 text-xl ">בנה מערכת מותאמת בעזרת טכנולוגיית AI</p>
           </a>
 
           {/* <a
