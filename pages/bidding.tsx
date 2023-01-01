@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Countdown from "react-countdown";
 import { useQuery } from "react-query";
 import Image from "next/image";
-import * as process from "process";
+
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import autoAnimate from "@formkit/auto-animate";
@@ -25,7 +25,8 @@ interface picData {
   picUrl: string;
   amount?: number;
 }
-const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| "http://localhost:3000/";
+const PORT = "http://localhost:3001/";
+//const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
 console.log({ PORT });
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
@@ -137,12 +138,12 @@ export default function Bidding() {
   // </SortableContext>
 
   return (
-    <div dir="rtl" className="flex flex-col items-center w-screen touch-none">
+    <div dir="rtl" className="flex flex-col items-center w-screen  h-full">
       <div className="flex mt-8 mb-20">
         <h3 className="ml-8"> זמן לסיום ההימורים</h3>
         <Countdown date={Date.now() + 1000000000} />
       </div>
-      <div className="flex flex-col items-center align-middle">
+      <div className="flex flex-col items-center align-middle ">
         <div className="flex items-center">
           <p className="ml-4">מי יותר</p>
           <p className={"text-4xl text-red-400"}>יהרוג את כולם</p>
@@ -161,7 +162,7 @@ export default function Bidding() {
           </div>
         )}
         {pics.data && pics.data != undefined && (
-          <div className="flex flex-col items-center w-screen justify-center  ">
+          <div className="flex flex-col items-center w-screen justify-center   ">
             {contendersNumber <= pics.data.questions.length - 1 ? (
               <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
                 <div className="flex flex-col sm:flex-row   ">
@@ -281,7 +282,7 @@ export function Contender(props: contenderProps) {
       style={style}
       {...listeners}
       {...attributes}
-      className="flex flex-col items-center mt-8 ml-6 mr-8 sm:w-full"
+      className="flex flex-col items-center mt-8 ml-6 mr-8 sm:w-full touch-none"
       onClick={props.handleClick}
     >
       <p>{props.picData.name}</p>
@@ -298,7 +299,7 @@ export function Contender(props: contenderProps) {
           sizes="(max-width: 768px) 100vw,
           (max-width: 1200px) 50vw,
           33vw"
-          className=" hover:bg-slate-300 rounded-2xl mb-8 h-40"
+          className=" hover:bg-slate-300 rounded-2xl mb-8 h-40 mt-4"
           alt="Image Alt"
         />
       </div>
