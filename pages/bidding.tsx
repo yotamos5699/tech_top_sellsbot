@@ -25,8 +25,8 @@ interface picData {
   picUrl: string;
   amount?: number;
 }
-const PORT = "http://localhost:3001/";
-//const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
+//const PORT = "http://localhost:3001/";
+const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
 console.log({ PORT });
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
