@@ -145,17 +145,19 @@ export default function Bidding() {
           <p className="ml-4">מי יותר</p>
           <p className={"text-4xl text-red-400"}>יהרוג את כולם</p>
         </div>
-        <div className="flex w-full justify-between gap-20 mt-5 items-center self-center">
-          {" "}
-          <p> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
-          <p
-            className={
-              "w-1/6 text-center ml-8 bg-blue-500 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
-            }
-          >
-            שלח
-          </p>
-        </div>
+        {isFinished && (
+          <div className="flex w-full justify-between gap-20 mt-5 items-center self-center">
+            {" "}
+            <p className="mr-8"> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
+            <p
+              className={
+                "w-1/6 text-center ml-8 bg-blue-500 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
+              }
+            >
+              שלח
+            </p>
+          </div>
+        )}
         {pics.data && pics.data != undefined && (
           <div className="flex flex-col items-center w-screen justify-center  ">
             {contendersNumber <= pics.data.questions.length - 1 ? (
