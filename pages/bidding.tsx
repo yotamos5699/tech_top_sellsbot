@@ -75,11 +75,13 @@ export default function Bidding() {
   });
 
   useEffect(() => {
-    if (contendersNumber * 2 - 1 == pics.data?.questions.length) {
+    if (contendersNumber == pics.data?.questions.length) {
       setPicsArray((prev) => prev.sort((a: any, b: any) => b.amount - a.amount));
       setIsFinished(true);
       console.log({ isFinished });
     }
+    console.log("question length", pics.data?.questions.length);
+    console.log({ contendersNumber });
   }, [picsArray]);
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export default function Bidding() {
     setActiveId(null);
     const { active, over } = event;
 
-    if (active.id !== over.id) {
+    if (active?.id !== over?.id) {
       console.log({ active, over });
       setPicsArray((pics: any) => {
         let oldIndex = 0;
@@ -186,7 +188,7 @@ export default function Bidding() {
                 onDragStart={handleDragStart}
               >
                 <SortableContext items={picsArray} strategy={rectSortingStrategy}>
-                  <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-screen">
+                  <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-screen overflow-y-scroll ml-6 mr-6">
                     {
                       /*@ts-ignore*/
                       picsArray &&
