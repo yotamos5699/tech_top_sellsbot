@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Countdown from "react-countdown";
 import { useQuery } from "react-query";
 import Image from "next/image";
+import * as process from "process";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import autoAnimate from "@formkit/auto-animate";
@@ -24,7 +25,8 @@ interface picData {
   picUrl: string;
   amount?: number;
 }
-const PORT = "http://localhost:3000/" || process.env.PORT;
+const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| "http://localhost:3000/";
+console.log({ PORT });
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
   for (let i = 0; i <= contenders.length - 2; i++) {
