@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, CSSProperties } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
+
 import Countdown from "react-countdown";
 import { useQuery } from "react-query";
 import Image from "next/image";
@@ -55,6 +57,8 @@ const fetchPics = async () =>
 export default function Bidding() {
   // const [show, setShow] = useState(false);
   // const parent = useRef(null);
+  let [loading, setLoading] = useState(true);
+  // let [color, setColor] = useState("#ffffff");
   const [isFinished, setIsFinished] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [contendersNumber, setContendersNumber] = useState(0);
@@ -136,7 +140,11 @@ export default function Bidding() {
   //   ))}
 
   // </SortableContext>
-
+  // const override: CSSProperties = {
+  //   display: "block",
+  //   margin: "0 auto",
+  //   borderColor: "red",
+  // };
   return (
     <div dir="rtl" className="flex flex-col items-center w-screen  h-full">
       <div className="flex mt-8 mb-20">
@@ -161,7 +169,7 @@ export default function Bidding() {
             </p>
           </div>
         )}
-        {pics.data && pics.data != undefined && (
+        {pics.data && pics.data != undefined ? (
           <div className="flex flex-col items-center w-screen justify-center   ">
             {contendersNumber <= pics.data.questions.length - 1 ? (
               <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
@@ -220,6 +228,16 @@ export default function Bidding() {
               <span className=" text-rose-300 text-xl font-bold">|{pics.data.questions.length / 2}|</span>
             </p>
           </div>
+        ) : (
+          <ClipLoader
+            color={"blue"}
+            loading={loading}
+            className={"mt-28"}
+            //  cssOverride={override}
+            size={150}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
         )}
       </div>
     </div>
