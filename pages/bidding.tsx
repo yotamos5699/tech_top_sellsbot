@@ -27,8 +27,20 @@ interface picData {
   picUrl: string;
   amount?: number;
 }
-//const PORT = "http://localhost:3001/";
-const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
+
+const contenders = {
+  "0506655699": "יותם",
+  "0506655698": "ארייה",
+  "0509980680": "אופק",
+  "0549714703": "דניאלה",
+  "0503676676": "סיסי",
+  "0545760652": "ספיר",
+  "0529403050": "נדב",
+  "0544534448": "משה",
+};
+
+const PORT = "http://localhost:3000/";
+//const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
 console.log({ PORT });
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
@@ -61,7 +73,14 @@ export default function Bidding() {
   // let [color, setColor] = useState("#ffffff");
   const [isFinished, setIsFinished] = useState(false);
   const [activeId, setActiveId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(false);
   const [contendersNumber, setContendersNumber] = useState(0);
+  const [voteData, setVoteData] = useState();
+  const [voterName, setVoterName] = useState<any>({
+    input: "",
+    value: "",
+  });
+  const [isIn, setIsIn] = useState(false);
   const [picsArray, setPicsArray] = useState<any[]>([]);
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -147,31 +166,73 @@ export default function Bidding() {
   //   margin: "0 auto",
   //   borderColor: "red",
   // };
+  const endDate = new Date("01/06/2023").getTime() - new Date().getTime();
   return (
     <div dir="rtl" className="flex flex-col items-center w-screen  h-full">
-      <div className="flex mt-8 mb-20">
-        <h3 className="ml-8"> זמן לסיום ההימורים</h3>
-        <Countdown date={Date.now() + 1000000000} />
-      </div>
-      <div className="flex flex-col items-center align-middle ">
-        <div className="flex items-center">
-          <p className="ml-4">מי יותר</p>
-          <p className={"text-4xl text-red-400"}>יהרוג את כולם</p>
+      <div className={`flex ${!isFinished && ""} w-full h-14 justify-between border-gray-300 border-2`}>
+        <div className="flex flex-col  mr-8 ">
+          <h3 className="ml-8"> זמן לסיום ההימורים</h3>
+          <Countdown date={Date.now() + endDate} />
         </div>
-        {isFinished && (
-          <div className="flex w-full justify-between gap-20 mt-5 items-center self-center">
-            {" "}
-            <p className="mr-8"> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
-            <p
-              className={
-                "w-1/6 text-center ml-8 bg-blue-500 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
-              }
-            >
-              שלח
-            </p>
+        {isIn && (
+          <div className="flex flex-col">
+            <p>שלום</p>
+            <p>{voterName.value}</p>
           </div>
         )}
-        {pics.data && pics.data != undefined ? (
+        <div className={`flex ${!isFinished && ""} align-middle`}>
+          <div className={`flex ${!isFinished && ""} ml-14`}>
+            <p className="">מי יותר</p>
+            <p className={"text-4xl text-red-400"}>טיפולי</p>
+          </div>
+          {isFinished && (
+            <div className="flex w-full justify-between gap-20 mt-5 items-center self-center">
+              {" "}
+              <p className="mr-8"> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
+              <p
+                className={
+                  "w-1/6 text-center ml-8 mb-4  bg-blue-500 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
+                }
+              >
+                שלח
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+      <div>
+        {!isIn && (
+          <div className="flex flex-col text-center mt-4">
+            <p className="mb-4"> הכנס מס טלפון </p>
+            <input
+              value={voterName.input}
+              onChange={(e) => {
+                setVoterName({ ...voterName, input: e.target.value });
+              }}
+              type={"text"}
+              className="mb-4 text-black text-center font-bold"
+            />
+            <button
+              onClick={() => {
+                const isExist = Object.keys(contenders).indexOf(voterName.input);
+                if (isExist != -1) {
+                  setErrorMessage(false);
+                  /* @ts-ignore*/
+                  setVoterName({ ...voterName, value: contenders[voterName.input] });
+                  setIsIn(true);
+                } else {
+                  setErrorMessage(true);
+                }
+              }}
+              className="border-white border-2 h-12 shadow-lg"
+            >
+              {" "}
+              התחבר{" "}
+            </button>
+            <p className="bg-red-800 mt-2">מספר לא תקין</p>
+          </div>
+        )}
+        {isIn && pics.data && pics.data != undefined ? (
           <div className="flex flex-col items-center w-screen justify-center   ">
             {contendersNumber <= pics.data.questions.length - 1 ? (
               <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
@@ -188,7 +249,7 @@ export default function Bidding() {
                 onDragStart={handleDragStart}
               >
                 <SortableContext items={picsArray} strategy={rectSortingStrategy}>
-                  <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-screen overflow-y-scroll ml-6 mr-6">
+                  <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-screen overflow-y-scroll  mr-14">
                     {
                       /*@ts-ignore*/
                       picsArray &&
