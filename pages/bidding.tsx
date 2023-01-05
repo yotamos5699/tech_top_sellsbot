@@ -40,8 +40,8 @@ const contenders = {
   "0544534448": "משה",
 };
 
-//const PORT = "http://localhost:3000/";
-const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
+const PORT = "http://localhost:3000/";
+//const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
 console.log({ PORT });
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
@@ -171,7 +171,7 @@ export default function Bidding() {
   return (
     <div
       dir="ltr"
-      className=" scroll-y-auto   scrollbar scrollbar-w-6 scrollbar-thumb-rounded-lg   scrollbar-thumb-gray-900 scrollbar-track-red-400"
+      className=" scroll-y-auto   scrollbar scrollbar-w-4 scrollbar-thumb-rounded-lg   scrollbar-thumb-gray-900 scrollbar-track-red-400"
     >
       <div dir="rtl" className="flex flex-col items-center w-screen  h-screen ">
         <div className="flex flex-col w=full">
@@ -207,9 +207,9 @@ export default function Bidding() {
             </div>
           )}
         </div>
-        <div>
+        <div className=" w-[95%] items-center ">
           {!isIn && (
-            <div className="flex flex-col text-center mt-4">
+            <div className="flex flex-col text-center mt-4   ">
               <p className="mb-4"> הכנס מס טלפון </p>
               <input
                 value={voterName.input}
@@ -240,12 +240,12 @@ export default function Bidding() {
             </div>
           )}
           {isIn && pics.data && pics.data != undefined ? (
-            <div className="flex flex-col items-center w-screen  justify-center mt-4 mb-4  border-gray-300 border-2  ">
+            <div className="flex flex-col items-center w-full  justify-center mt-4 mb-4  border-gray-300 border-2    ">
               {contendersNumber <= pics.data.questions.length - 1 ? (
                 <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
                   <div className="flex flex-col sm:flex-row items-center  ">
                     <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber]} />
-                    <Image alt="" src="/../public/vs.png" width={70} height={20} />
+                    <Image alt="" src="/vs.png" width={70} height={20} />
                     <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber + 1]} />
                   </div>
                 </div>
