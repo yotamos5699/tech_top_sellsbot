@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, CSSProperties } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import vs from "../src/vs.png";
 import Countdown from "react-countdown";
 import { useQuery } from "react-query";
 import Image from "next/image";
@@ -40,8 +40,8 @@ const contenders = {
   "0544534448": "משה",
 };
 
-//const PORT = "http://localhost:3000/";
-const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
+const PORT = "http://localhost:3000/";
+//const PORT = "https://tech-top-sellsbot.vercel.app/"; //|| ;
 console.log({ PORT });
 const setContenders = (contenders: picData[]) => {
   let sequens = [];
@@ -169,30 +169,37 @@ export default function Bidding() {
   // };
   const endDate = new Date("01/06/2023").getTime() - new Date().getTime();
   return (
-    <div dir="rtl" className="flex flex-col items-center w-screen  h-full">
-      <div className={`flex ${!isFinished && ""} w-full h-14 justify-between border-gray-300 border-2`}>
-        <div className="flex flex-col  mr-8 ">
-          <h3 className="ml-8"> זמן לסיום ההימורים</h3>
-          <Countdown date={Date.now() + endDate} />
-        </div>
-        {isIn && (
-          <div className="flex flex-col">
-            <p>שלום</p>
-            <p>{voterName.value}</p>
-          </div>
-        )}
-        <div className={`flex ${!isFinished && ""} align-middle`}>
-          <div className={`flex ${!isFinished && ""} ml-14`}>
-            <p className="">מי יותר</p>
-            <p className={"text-4xl text-red-400"}>טיפולי</p>
+    <div
+      dir="ltr"
+      className=" scroll-y-auto   scrollbar scrollbar-w-6 scrollbar-thumb-rounded-lg   scrollbar-thumb-gray-900 scrollbar-track-red-400"
+    >
+      <div dir="rtl" className="flex flex-col items-center w-screen  h-screen ">
+        <div className="flex flex-col w=full">
+          <div className={`flex  w-full h-14 justify-between mb-2 border-gray-300 border-2`}>
+            <div className="flex flex-col  mr-2 ">
+              <h3 className="ml-8"> זמן לסיום ההימורים</h3>
+              <Countdown className="flex" date={Date.now() + endDate} />
+            </div>
+            {isIn && (
+              <div className="flex items-center flex-col ml-6 text-center ">
+                <p className="text-[8px]">שלום</p>
+                <p>{voterName.value}</p>
+              </div>
+            )}
+            <div className={`flex ${!isFinished && ""} align-middle`}>
+              <div className={`flex ${!isFinished && ""} ml-2`}>
+                <p className="">מי יותר</p>
+                <p className={"text-4xl text-red-400"}>טיפולי</p>
+              </div>
+            </div>
           </div>
           {isFinished && (
-            <div className="flex w-full justify-between gap-20 mt-5 items-center self-center">
+            <div className="flex w-full h-10 justify-between gap-20 items-center self-center border-gray-300 border-2">
               {" "}
-              <p className="mr-8"> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
+              <p className="mr-2 text-[10px] "> הדירוג שלך, ניתן לתקן את סדר המקומות </p>
               <p
                 className={
-                  "w-1/6 text-center ml-8 mb-4  bg-blue-500 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
+                  " text-center  h-full w-1/4 bg-blue-800 hover:bg-blue-400 text-white font-bold border rounded  py-2 px-3 border-blue-700 hover:border-blue-500"
                 }
               >
                 שלח
@@ -200,109 +207,112 @@ export default function Bidding() {
             </div>
           )}
         </div>
-      </div>
-      <div>
-        {!isIn && (
-          <div className="flex flex-col text-center mt-4">
-            <p className="mb-4"> הכנס מס טלפון </p>
-            <input
-              value={voterName.input}
-              onChange={(e) => {
-                setVoterName({ ...voterName, input: e.target.value });
-              }}
-              type={"text"}
-              className="mb-4 text-black text-center font-bold"
-            />
-            <button
-              onClick={() => {
-                const isExist = Object.keys(contenders).indexOf(voterName.input);
-                if (isExist != -1) {
-                  setErrorMessage(false);
-                  /* @ts-ignore*/
-                  setVoterName({ ...voterName, value: contenders[voterName.input] });
-                  setIsIn(true);
-                } else {
-                  setErrorMessage(true);
-                }
-              }}
-              className="border-white border-2 h-12 shadow-lg"
-            >
-              {" "}
-              התחבר{" "}
-            </button>
-            <p className="bg-red-800 mt-2">מספר לא תקין</p>
-          </div>
-        )}
-        {isIn && pics.data && pics.data != undefined ? (
-          <div className="flex flex-col items-center w-screen justify-center   ">
-            {contendersNumber <= pics.data.questions.length - 1 ? (
-              <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
-                <div className="flex flex-col sm:flex-row   ">
-                  <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber]} />
-                  <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber + 1]} />
-                </div>
-              </div>
-            ) : (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCorners}
-                onDragEnd={handleDragEnd}
-                onDragStart={handleDragStart}
+        <div>
+          {!isIn && (
+            <div className="flex flex-col text-center mt-4">
+              <p className="mb-4"> הכנס מס טלפון </p>
+              <input
+                value={voterName.input}
+                onChange={(e) => {
+                  setVoterName({ ...voterName, input: e.target.value });
+                }}
+                type={"text"}
+                className="mb-4 text-black text-center font-bold"
+              />
+              <button
+                onClick={() => {
+                  const isExist = Object.keys(contenders).indexOf(voterName.input);
+                  if (isExist != -1) {
+                    setErrorMessage(false);
+                    /* @ts-ignore*/
+                    setVoterName({ ...voterName, value: contenders[voterName.input] });
+                    setIsIn(true);
+                  } else {
+                    setErrorMessage(true);
+                  }
+                }}
+                className="border-white border-2 h-12 shadow-lg"
               >
-                <SortableContext items={picsArray} strategy={rectSortingStrategy}>
-                  <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-screen overflow-y-scroll  mr-14">
-                    {
-                      /*@ts-ignore*/
-                      picsArray &&
-                        picsArray.map((pic, index) => (
-                          <div key={pic.id} className="relative sm:w-full">
-                            <p className="absolute  w-1/6 h-1/6 text-center align-text-bottom text-xl mr-6 border-gray-300 border-2 rounded-lg">
-                              {index + 1}
-                            </p>{" "}
-                            <Contender
-                              isFinished={isFinished}
-                              key={pic.id}
-                              id={pic.id}
-                              handleClick={handleClick}
-                              picData={pic}
-                            />
-                          </div>
-                        ))
-                    }
+                {" "}
+                התחבר{" "}
+              </button>
+              <p className="bg-red-800 mt-2">מספר לא תקין</p>
+            </div>
+          )}
+          {isIn && pics.data && pics.data != undefined ? (
+            <div className="flex flex-col items-center w-screen  justify-center mt-4 mb-4  border-gray-300 border-2  ">
+              {contendersNumber <= pics.data.questions.length - 1 ? (
+                <div className=" border-gray-300 border-2 mt-4 sm:w-10/12  max-w-[1000px]">
+                  <div className="flex flex-col sm:flex-row items-center  ">
+                    <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber]} />
+                    <Image alt="" src="/../public/vs.png" width={70} height={20} />
+                    <Contender handleClick={handleClick} picData={pics.data.questions[contendersNumber + 1]} />
                   </div>
-                  <DragOverlay>
-                    {activeId ? (
-                      <div
-                        style={{
-                          //  width: "100px",
-                          //  height: "100px",
-                          backgroundColor: "red",
-                        }}
-                      ></div>
-                    ) : null}
-                  </DragOverlay>
-                </SortableContext>
-              </DndContext>
-            )}
-            <p className="mt-4 flex justify-center items-center gap-6">
-              <span className="flex space-x-4"> בחירה </span>
-              <span className="flex space-x-4 text-rose-300 text-xl font-bold">|{contendersNumber / 2 + 1}|</span>
-              <span>מתוך</span>
+                </div>
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCorners}
+                  onDragEnd={handleDragEnd}
+                  onDragStart={handleDragStart}
+                >
+                  <SortableContext items={picsArray} strategy={rectSortingStrategy}>
+                    <div className=" sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 sm:mt-6 w-full ">
+                      {
+                        /*@ts-ignore*/
+                        picsArray &&
+                          picsArray.map((pic, index) => (
+                            <div key={pic.id} className="relative sm:w-full">
+                              <p className="absolute  w-1/6 h-1/6 text-center align-text-bottom text-xl mr-6 border-gray-300 border-2 rounded-lg">
+                                {index + 1}
+                              </p>{" "}
+                              <Contender
+                                isFinished={isFinished}
+                                key={pic.id}
+                                id={pic.id}
+                                handleClick={handleClick}
+                                picData={pic}
+                              />
+                            </div>
+                          ))
+                      }
+                    </div>
+                    <DragOverlay>
+                      {activeId ? (
+                        <div
+                          style={{
+                            //  width: "100px",
+                            //  height: "100px",
+                            backgroundColor: "red",
+                          }}
+                        ></div>
+                      ) : null}
+                    </DragOverlay>
+                  </SortableContext>
+                </DndContext>
+              )}
+              {!isFinished && (
+                <p className="mt-4 flex justify-center items-center gap-6">
+                  <span className="flex space-x-4"> בחירה </span>
+                  <span className="flex space-x-4 text-rose-300 text-xl font-bold">|{contendersNumber / 2 + 1}|</span>
+                  <span>מתוך</span>
 
-              <span className=" text-rose-300 text-xl font-bold">|{pics.data.questions.length / 2}|</span>
-            </p>
-          </div>
-        ) : (
-          <ClipLoader
-            color={"blue"}
-            loading={loading}
-            className={"mt-28"}
-            //  cssOverride={override}
-            size={150}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
-        )}
+                  <span className=" text-rose-300 text-xl font-bold">|{pics.data.questions.length / 2}|</span>
+                </p>
+              )}
+            </div>
+          ) : (
+            <ClipLoader
+              color={"blue"}
+              loading={loading}
+              className={"mt-28"}
+              //  cssOverride={override}
+              size={150}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
